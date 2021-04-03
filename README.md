@@ -1,55 +1,137 @@
-# Getting Started with Create React App
+![](/.github/banner.png)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Manifold Design System
 
-## Available Scripts
+## Overview
 
-In the project directory, you can run:
+- 📚 [Storybook](https://storybook.js.org) for UI component development and
+  [auto-generated docs](https://medium.com/storybookjs/storybook-docs-sneak-peak-5be78445094a)
 
-### `yarn start`
+- 💅 [Styled-components](https://www.styled-components.com/) for component-scoped styling
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- ⚛️ [React](https://reactjs.org/) declarative component-centric UI
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Maintaining the system
 
-### `yarn test`
+- 📦 [NPM](https://www.npmjs.com/) for
+  [packaging and distribution](https://blog.hichroma.com/how-packaging-makes-it-dead-simple-to-share-ui-components-29912593539d)
+- ✅ [Chromatic](https://www.chromatic.com/) to prevent UI bugs in components (by Storybook
+  maintainers)
+- 🚥 [CircleCI](https://circleci.com/) Continuous integration
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
-for more information.
+## Develop
 
-### `yarn build`
+```bash
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### Work on components
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm storybook
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for
-more information.
+## Global Styles
 
-### `yarn eject`
+Components within the design system assume that a set of global styles have been configured.
+Depending upon the needs of the application, this can be done several ways:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+#### Option 1: Render the `GlobalStyle` component
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time.
-This command will remove the single build dependency from your project.
+Useful when you don't need any custom `body` styling in the application, typically this would be
+placed in a layout component that wraps all pages, or a top-level `App` component.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel,
-ESLint, etc) right into your project so you have full control over them. All of the commands except
-`eject` will still work, but they will point to the copied scripts so you can tweak them. At this
-point you’re on your own.
+```javascript
+import { global } from '@storybook/design-system';
+const { GlobalStyle } = global;
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle
-deployments, and you shouldn’t feel obligated to use this feature. However we understand that this
-tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```javascript
+/* Render the global styles once per page */
+<GlobalStyle />
+```
 
-## Learn More
+#### Option 2: Use the `bodyStyles` to apply styling
 
-You can learn more in the
-[Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Useful when you want build upon the shared global styling.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```javascript
+import { createGlobalStyle } from 'styled-components';
+import { global } from '@storybook/design-system';
+const { bodyStyles } = global;
+
+const CustomGlobalStyle = createGlobalStyle`
+  body {
+    ${bodyStyles}
+    // Custom body styling for the app
+  }
+`;
+```
+
+```javascript
+/* Render the global styles once per page */
+<CustomGlobalStyle />
+```
+
+## Font Loading
+
+Rather than `@import` fonts in the `GlobalStyle` component, the design system's font URL is exported
+with the intention of using it in a `<link>` tag as the href. Different frameworks and environments
+handle component re-renders in their own way (a re-render would cause the font to be re-fetched), so
+this approach allows the design system consumers to choose the font loading method that is most
+appropriate for their environment.
+
+#### Option 1: Build the link tag manually
+
+```javascript
+import { global } from '@storybook/design-system';
+
+const fontLink = document.createElement('link');
+
+fontLink.href = global.fontUrl;
+fontLink.rel = 'stylesheet';
+
+document.head.appendChild(fontLink);
+```
+
+#### Option 2: Render the link tag in a component
+
+```jsx
+import React from 'react';
+import { global } from '@storybook/design-system';
+
+const Layout = ({ children }) => (
+  <html>
+    <head>
+      <link href={global.fontUrl} rel="stylesheet" />
+    </head>
+
+    <body>{children}</body>
+  </html>
+);
+
+export default Layout;
+```
+
+## Development Scripts
+
+#### `npm release`
+
+> Bump the version
+
+> Push a release to GitHub and npm
+
+> Push a changelog to GitHub
+
+_Notes:_
+
+- Requires authentication with [`npm adduser`](https://docs.npmjs.com/cli/adduser.html)
+- [`auto`](https://github.com/intuit/auto) is used to generate a changelog and push it to GitHub. In
+  order for this to work correctly, **an environment variable called `GH_TOKEN` is needed** that
+  references a
+  [GitHub personal access token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line)
+  with the appropriate permissions to update the repo.
+
+## License
+
+GPL-2.0
