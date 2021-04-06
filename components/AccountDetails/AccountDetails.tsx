@@ -22,8 +22,8 @@ const Dialogue = styled.div`
   margin: 0px 0px 2rem;
   background-color: ${({ theme }) => theme.bg1};
   box-shadow: rgb(0 0 0 / 5%) 0px 4px 8px 0px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    'Open Sans', 'Helvetica Neue', sans-serif;
   padding: 0px;
   overflow: hidden;
   align-self: center;
@@ -209,7 +209,7 @@ export default function AccountDetails({
       .filter(
         (k) =>
           SUPPORTED_WALLETS[k].connector === connector &&
-          (connector !== injected || isMetaMask === (k === 'METAMASK')),
+          (connector !== injected || isMetaMask === (k === 'METAMASK'))
       )
       .map((k) => SUPPORTED_WALLETS[k].name)[0];
     return <WalletName>Connected with {name}</WalletName>;
@@ -251,22 +251,16 @@ export default function AccountDetails({
                 </div>
               </AccountGroupingRow>
               <AccountGroupingRow id="web3-account-identifier-row">
-                <AccountControl>
-                  {ENSName ? <p> {ENSName}</p> : <p>{account}</p>}
-                </AccountControl>
+                <AccountControl>{ENSName ? <p> {ENSName}</p> : <p>{account}</p>}</AccountControl>
               </AccountGroupingRow>
               <AccountGroupingRow>
                 {ENSName ? (
                   <AccountControl>
                     <>
-                      {account && (
-                        <span style={{ marginLeft: '4px' }}>Copy Address</span>
-                      )}
+                      {account && <span style={{ marginLeft: '4px' }}>Copy Address</span>}
                       {chainId && account && (
                         <AddressLink href={''}>
-                          <span style={{ marginLeft: '4px' }}>
-                            View on Etherscan
-                          </span>
+                          <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
                         </AddressLink>
                       )}
                     </>
@@ -274,14 +268,10 @@ export default function AccountDetails({
                 ) : (
                   <AccountControl>
                     <>
-                      {account && (
-                        <span style={{ marginLeft: '4px' }}>Copy Address</span>
-                      )}
+                      {account && <span style={{ marginLeft: '4px' }}>Copy Address</span>}
                       {chainId && account && (
                         <AddressLink href={''}>
-                          <span style={{ marginLeft: '4px' }}>
-                            View on Etherscan
-                          </span>
+                          <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
                         </AddressLink>
                       )}
                     </>

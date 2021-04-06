@@ -77,11 +77,7 @@ export enum ButtonType {
   OUTLINE = 'outline',
 }
 
-const Button: React.FunctionComponent<ButtonProps> = ({
-  children,
-  variant,
-  ...rest
-}) => {
+const Button: React.FunctionComponent<ButtonProps> = ({ children, variant, ...rest }) => {
   const theme = useTheme();
 
   const styles = [buttonCss(theme)];

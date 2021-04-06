@@ -21,9 +21,7 @@ export default {
   },
 };
 
-const Template: Story<ButtonProps> = (args) => (
-  <Component {...args}>{args.children}</Component>
-);
+const Template: Story<ButtonProps> = (args) => <Component {...args}>{args.children}</Component>;
 
 const decoratorCss = css`
   & > * {

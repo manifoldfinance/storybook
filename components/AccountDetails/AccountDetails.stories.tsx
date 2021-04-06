@@ -9,21 +9,15 @@ export default {
   component: Component,
   argTypes: {},
   args: {
-    pendingTransactions: [
-      '0xd9562e5d8582e4126d198f0bc6e08b7727ce8dce224d15dc24aa268eb077a416',
-    ],
-    confirmedTransactions: [
-      '0x27660773e72bacbfd9d2ed23643d981827b589df4358a4336434389bc20f1cdf',
-    ],
+    pendingTransactions: ['0xd9562e5d8582e4126d198f0bc6e08b7727ce8dce224d15dc24aa268eb077a416'],
+    confirmedTransactions: ['0x27660773e72bacbfd9d2ed23643d981827b589df4358a4336434389bc20f1cdf'],
     ENSName: undefined,
     openOptions: console.log,
     children: '🔮 🔮 🔮 ',
   },
 };
 
-const Template: Story<any> = (args) => (
-  <Component {...args}>{args.children}</Component>
-);
+const Template: Story<any> = (args) => <Component {...args}>{args.children}</Component>;
 
 const decoratorCss = css`
   margin: 1em 2em;

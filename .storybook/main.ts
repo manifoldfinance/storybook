@@ -10,7 +10,7 @@ function getPackageDir(filepath) {
     const { dir, root } = parse(currDir);
     if (dir === root) {
       throw new Error(
-        `Could not find package.json in the parent directories starting from ${filepath}.`,
+        `Could not find package.json in the parent directories starting from ${filepath}.`
       );
     }
     currDir = dir;
@@ -26,8 +26,7 @@ module.exports = {
     reactDocgen: 'react-docgen-typescript',
     reactDocgenTypescriptOptions: {
       shouldExtractLiteralValuesFromEnum: true,
-      propFilter: (prop) =>
-        prop.parent ? !/node_modules/.test(prop.parent.fileName) : true,
+      propFilter: (prop) => (prop.parent ? !/node_modules/.test(prop.parent.fileName) : true),
     },
   },
   webpackFinal: async (config) => {
