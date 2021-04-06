@@ -1,7 +1,7 @@
-build/
+storybook-static/
 dist/
+build/
 *.css
 *.scss
 *.svg
 *.html
-
