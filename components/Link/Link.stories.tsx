@@ -12,7 +12,9 @@ export default {
   },
 };
 
-const Template: Story<any> = (args) => <Component {...args}>{args.children}</Component>;
+const Template: Story<any> = (args) => (
+  <Component {...args}>{args.children}</Component>
+);
 
 const decoratorCss = css`
   margin: 1em 2em;

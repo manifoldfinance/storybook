@@ -12,7 +12,10 @@ type AsyncSendable = {
   isMetaMask?: boolean;
   host?: string;
   path?: string;
-  sendAsync?: (request: any, callback: (error: any, response: any) => void) => void;
+  sendAsync?: (
+    request: any,
+    callback: (error: any, response: any) => void,
+  ) => void;
   send?: (request: any, callback: (error: any, response: any) => void) => void;
 };
 
@@ -66,13 +69,20 @@ class MiniRpcProvider implements AsyncSendable {
         body: JSON.stringify(batch.map((item) => item.request)),
       });
     } catch (error) {
-      batch.forEach(({ reject }) => reject(new Error('Failed to send batch call')));
+      batch.forEach(({ reject }) =>
+        reject(new Error('Failed to send batch call')),
+      );
       return;
     }
 
     if (!response.ok) {
       batch.forEach(({ reject }) =>
-        reject(new RequestError(`${response.status}: ${response.statusText}`, -32000))
+        reject(
+          new RequestError(
+            `${response.status}: ${response.statusText}`,
+            -32000,
+          ),
+        ),
       );
       return;
     }
@@ -81,7 +91,9 @@ class MiniRpcProvider implements AsyncSendable {
     try {
       json = await response.json();
     } catch (error) {
-      batch.forEach(({ reject }) => reject(new Error('Failed to parse JSON response')));
+      batch.forEach(({ reject }) =>
+        reject(new Error('Failed to parse JSON response')),
+      );
       return;
     }
     const byKey = batch.reduce<{ [id: number]: BatchItem }>((memo, current) => {
@@ -97,7 +109,11 @@ class MiniRpcProvider implements AsyncSendable {
       if (resolve && reject) {
         if ('error' in result) {
           reject(
-            new RequestError(result?.error?.message, result?.error?.code, result?.error?.data)
+            new RequestError(
+              result?.error?.message,
+              result?.error?.code,
+              result?.error?.data,
+            ),
           );
         } else if ('result' in result) {
           resolve(result.result);
@@ -106,8 +122,8 @@ class MiniRpcProvider implements AsyncSendable {
             new RequestError(
               `Received unexpected JSON-RPC response to ${method} request.`,
               -32000,
-              result
-            )
+              result,
+            ),
           );
         }
       }
@@ -121,16 +137,18 @@ class MiniRpcProvider implements AsyncSendable {
       method: string;
       params?: unknown[] | object;
     },
-    callback: (error: any, response: any) => void
+    callback: (error: any, response: any) => void,
   ): void => {
     this.request(request.method, request.params)
-      .then((result) => callback(null, { jsonrpc: '2.0', id: request.id, result }))
+      .then((result) =>
+        callback(null, { jsonrpc: '2.0', id: request.id, result }),
+      )
       .catch((error) => callback(error, null));
   };
 
   public readonly request = async (
     method: string | { method: string; params: unknown[] },
-    params?: unknown[] | object
+    params?: unknown[] | object,
   ): Promise<unknown> => {
     if (typeof method !== 'string') {
       return this.request(method.method, method.params);
@@ -150,7 +168,8 @@ class MiniRpcProvider implements AsyncSendable {
         reject,
       });
     });
-    this.batchTimeoutId = this.batchTimeoutId ?? setTimeout(this.clearBatch, this.batchWaitTimeMs);
+    this.batchTimeoutId =
+      this.batchTimeoutId ?? setTimeout(this.clearBatch, this.batchWaitTimeMs);
     return promise;
   };
 }
@@ -162,7 +181,7 @@ export class NetworkConnector extends AbstractConnector {
   constructor({ urls, defaultChainId }: NetworkConnectorArguments) {
     invariant(
       defaultChainId || Object.keys(urls).length === 1,
-      'defaultChainId is a required argument with >1 url'
+      'defaultChainId is a required argument with >1 url',
     );
     super({
       supportedChainIds: Object.keys(urls).map((k): number => Number(k)),
@@ -172,7 +191,10 @@ export class NetworkConnector extends AbstractConnector {
     this.providers = Object.keys(urls).reduce<{
       [chainId: number]: MiniRpcProvider;
     }>((accumulator, chainId) => {
-      accumulator[Number(chainId)] = new MiniRpcProvider(Number(chainId), urls[Number(chainId)]);
+      accumulator[Number(chainId)] = new MiniRpcProvider(
+        Number(chainId),
+        urls[Number(chainId)],
+      );
       return accumulator;
     }, {});
   }
