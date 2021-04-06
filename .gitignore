@@ -9,3 +9,6 @@ storybook-static/
 
 # JS
 node_modules
+coverage/
+cache
+.cache
